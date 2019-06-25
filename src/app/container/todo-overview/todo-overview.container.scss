@@ -1,0 +1,10 @@
+.todo-overview {
+    max-width: 768px;
+    margin: auto;
+    padding: 16px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+    }
+}

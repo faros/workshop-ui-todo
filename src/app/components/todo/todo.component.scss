@@ -1,0 +1,18 @@
+.todo {
+    display: flex;
+    justify-content: space-between;
+
+    &__description {
+        color: grey;
+    }
+
+    &__actions {
+        display: none;
+    }
+
+    &:hover {
+        .todo__actions {
+            display: flex;
+        }
+    }
+}

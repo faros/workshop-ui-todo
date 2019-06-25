@@ -1,0 +1,38 @@
+{
+  "todos": [
+    {
+      "id": "50699300608",
+      "text": "Buy a box of twix",
+      "description": "Not the fake ones, biggest box they've got",
+      "isCompleted": false
+    },
+    {
+      "id": "8949816781",
+      "text": "Finish painting",
+      "isCompleted": true
+    },
+    {
+      "id": "741",
+      "text": "Get groceriesa",
+      "isCompleted": false,
+      "description": "azeaze"
+    },
+    {
+      "id": "894651307",
+      "text": "Car maintenance",
+      "isCompleted": true
+    },
+    {
+      "text": "Get noodles",
+      "description": "Aiki please",
+      "id": "GJsbY55",
+      "isCompleted": false
+    },
+    {
+      "text": "Water plants",
+      "description": "Garden and indoors",
+      "id": "rzFSrUH",
+      "isCompleted": true
+    }
+  ]
+}
