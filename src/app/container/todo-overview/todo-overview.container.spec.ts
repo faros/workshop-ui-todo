@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import { NO_ERRORS_SCHEMA} from '@angular/core';
+import {DebugElement, NO_ERRORS_SCHEMA} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import SpyObj = jasmine.SpyObj;
@@ -28,6 +28,7 @@ describe('TodoOverviewContainer', () => {
                 ReactiveFormsModule
             ],
             providers: [
+                // Provide the injectable and return mock objects.
                 {
                     provide: MatDialog,
                     useFactory: () => jasmine.createSpyObj('MatDialog', [
@@ -61,7 +62,7 @@ describe('TodoOverviewContainer', () => {
             text: 'Pizza',
             isCompleted: false
         } as Todo;
-        todoFacade.getIncompleteTodos.and.returnValue(of([incompleteTodo]));
+        todoFacade.getIncompleteTodos.and.returnValue(of([incompleteTodo])); // Don't forget to return a observable.
 
         completedTodo = {
             id: '1',
@@ -90,12 +91,8 @@ describe('TodoOverviewContainer', () => {
             text: 'Pizza',
             isCompleted: false
         } as Todo]);
-        expect(todoLists[1].properties.todos).toEqual([{
-            id: '1',
-            text: 'text',
-            description: 'description',
-            isCompleted: true
-        } as Todo]);
+
+        // TODO: check second list.
     });
 
     describe('when loading', () => {
@@ -105,59 +102,49 @@ describe('TodoOverviewContainer', () => {
         });
 
         it('should show the spinner', () => {
-            expect(fixture.debugElement.query(SPINNER_SELECTOR)).not.toBeNull();
+            // TODO: implement
         });
 
         it('should hide the todo list', () => {
-            expect(fixture.debugElement.queryAll(TODO_LIST_SELECTOR).length).toEqual(0);
+            // TODO: implement
         });
     });
 
     describe('when the user creates a todo', () => {
         it('should create the todo using the todoFacade', () => {
-            fixture.debugElement.query(NEW_TODO_BUTTON_SELECTOR).triggerEventHandler('createTodo', {
-                text: 'text',
-                isCompleted: false
-            } as Todo);
 
-            expect(todoFacade.createTodo).toHaveBeenCalledWith({
-                text: 'text',
-                isCompleted: false
-            } as Todo);
+            // TODO: implement, trigger button even with mock button.triggerEventHandler(method, data);
+            // TODO: Check todoFacade createTodo call.
         });
     });
 
     describe('when the user toggles a todo', () => {
         it('should toggle and update the todo using the todoFacade', () => {
-            const todoLists = fixture.debugElement.queryAll(TODO_LIST_SELECTOR);
-
-            todoLists[0].triggerEventHandler('toggleCompleted', incompleteTodo);
-            expect(todoFacade.updateTodo).toHaveBeenCalledWith({
-                id: '2',
-                text: 'Pizza',
-                isCompleted: true
-            } as Todo);
-
-            todoFacade.updateTodo.calls.reset();
-
-            todoLists[1].triggerEventHandler('toggleCompleted', completedTodo);
-            expect(todoFacade.updateTodo).toHaveBeenCalledWith({
-                id: '1',
-                text: 'text',
-                description: 'description',
-                isCompleted: false
-            } as Todo);
+            /**
+             * TODO:
+             *  get all todo lists on the page
+             *  trigger toggleCompleted event on the first list with incompleteTodo as the parameter.
+             *  check if todoFacade.updateTodo method had been called with correct param.
+             *  reset updateTodo calls (todoFacade.updateTodo.calls.reset();)
+             *  trigger toggleCompleted event on second list with completeTodo as the parameter.
+             *  Check updateTodo again
+             */
         });
     });
 
     describe('when the user edits a todo', () => {
-        it('should show the "TodoFormDialogComponent" dialog with the given todo', () => {
-            const todoLists = fixture.debugElement.queryAll(TODO_LIST_SELECTOR);
-            const dialogRef = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+        let dialogRef: SpyObj<MatDialogRef<TodoFormDialogComponent>>;
+        let todoLists: Array<DebugElement>;
+
+        beforeEach(() => {
+            dialogRef = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+            dialogRef.afterClosed.and.returnValue(NEVER); // By default, never call the afterClosed event
 
             dialog.open.and.returnValue(dialogRef);
-            dialogRef.afterClosed.and.returnValue(NEVER);
+            todoLists = fixture.debugElement.queryAll(TODO_LIST_SELECTOR);
+        });
 
+        it('should show the "TodoFormDialogComponent" dialog with the given todo', () => {
             todoLists[0].triggerEventHandler('edit', incompleteTodo);
             expect(dialog.open).toHaveBeenCalledWith(TodoFormDialogComponent, {
                 data: {
@@ -182,16 +169,18 @@ describe('TodoOverviewContainer', () => {
 
         describe('given the user has submitted the dialog', () => {
             it('should update the todo using the todoFacade', () => {
-                const todoLists = fixture.debugElement.queryAll(TODO_LIST_SELECTOR);
-                const dialogRef = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
+                // Change the afterClosed function so it returns an observable which will immediately output a TodoModel.
+                // We do this BEFORE the user clicks on the edit button, because we have to setup our stubbed functions
+                // before the edit code is ran.
 
-                dialog.open.and.returnValue(dialogRef);
                 dialogRef.afterClosed.and.returnValue(of({
                     text: 'cool',
                     description: 'neat'
                 } as Todo));
 
+                // Simulate the edit
                 todoLists[0].triggerEventHandler('edit', incompleteTodo);
+                // After this line the afterClosed subscription will resolve because of the of({...}) stubbing we did earlier.
 
                 expect(todoFacade.updateTodo).toHaveBeenCalledWith({
                     id: '2',
@@ -204,39 +193,27 @@ describe('TodoOverviewContainer', () => {
 
         describe('given the user has cancelled the dialog', () => {
             it('should not update the todo using the todoFacade', () => {
-                const todoLists = fixture.debugElement.queryAll(TODO_LIST_SELECTOR);
-                const dialogRef = jasmine.createSpyObj('MatDialogRef', ['afterClosed']);
-
-                dialog.open.and.returnValue(dialogRef);
-                dialogRef.afterClosed.and.returnValue(of(undefined));
-
-                todoLists[0].triggerEventHandler('edit', incompleteTodo);
-
-                expect(todoFacade.updateTodo).not.toHaveBeenCalled();
+                /**
+                 * TODO:
+                 *  Make afterClosed return an observable which outputs undefined (the user cancelled the dialog)
+                 *  Click on the edit button.
+                 *  Check if the updateTodo function has not been called.
+                 */
             });
         });
     });
 
     describe('when the user deletes a todo', () => {
         it('should delete the todo using the todoFacade', () => {
-            const todoLists = fixture.debugElement.queryAll(TODO_LIST_SELECTOR);
-
-            todoLists[0].triggerEventHandler('delete', incompleteTodo);
-            expect(todoFacade.deleteTodo).toHaveBeenCalledWith({
-                id: '2',
-                text: 'Pizza',
-                isCompleted: false
-            } as Todo);
-
-            todoFacade.updateTodo.calls.reset();
-
-            todoLists[1].triggerEventHandler('delete', completedTodo);
-            expect(todoFacade.deleteTodo).toHaveBeenCalledWith({
-                id: '1',
-                text: 'text',
-                description: 'description',
-                isCompleted: true
-            } as Todo);
+            /**
+             * TODO:
+             *  get all todo lists on the page
+             *  trigger delete event on the first list with incompleteTodo as the parameter.
+             *  check if todoFacade.deleteTodo method had been called with correct param.
+             *  reset delete calls (todoFacade.deleteTodo.calls.reset();)
+             *  trigger delete event on second list with completeTodo as the parameter.
+             *  Check deleteTodo again
+             */
         });
     });
 });

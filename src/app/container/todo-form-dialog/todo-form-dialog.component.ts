@@ -1,34 +1,24 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {Todo} from '../../models/todo.model';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
+
+/*
+*   TODO: Add form for title (required) and description (optional)
+*   TODO: Add cancel button
+*   TODO: Add submit button, make it disabled when the form is invalid.
+*   TODO: Display "Create todo" when no existing todo is passed to the component, else display "Update todo"
+*   TODO: When a todo is passed to the component, fill in the form with the data.
+*
+* Useful documentation:
+*   https://material.angular.io/components/dialog/overview
+*   https://angular.io/guide/reactive-forms
+* */
 
 @Component({
     template: `
         <div class='todo-form'>
-            <h1 mat-dialog-title>{{ getTitle() }}</h1>
-            <div mat-dialog-content>
-                <form class='todo-form__form' [formGroup]='todoForm'>
-                    <mat-form-field>
-                        <input matInput cdkFocusInitial placeholder='Text' formControlName='text'>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput placeholder='Description' formControlName='description'>
-                    </mat-form-field>
-                </form>
-            </div>
-            <div mat-dialog-actions>
-                <button mat-button
-                        class='todo-form__cancel'
-                        (click)="close()">
-                    Cancel
-                </button>
-                <button mat-button
-                        class='todo-form__submit'
-                        [disabled]='todoForm.invalid'
-                        [mat-dialog-close]="todoForm.value">
-                    Submit
-                </button>
+            <div class='todo-form__form'>
             </div>
         </div>
     `,
@@ -36,8 +26,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class TodoFormDialogComponent implements OnInit {
     todoForm = new FormGroup({
-        text: new FormControl('', Validators.required),
-        description: new FormControl(''),
+
     });
 
     constructor(private dialogRef: MatDialogRef<TodoFormDialogComponent>,
@@ -48,13 +37,5 @@ export class TodoFormDialogComponent implements OnInit {
         if (this.todo) {
             this.todoForm.patchValue(this.todo);
         }
-    }
-
-    close() {
-        this.dialogRef.close();
-    }
-
-    getTitle(): string {
-        return this.todo ? 'Update todo' : 'Create todo';
     }
 }

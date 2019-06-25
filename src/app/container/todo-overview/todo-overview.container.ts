@@ -4,37 +4,31 @@ import {MatDialog} from '@angular/material';
 import {TodoFormDialogComponent} from '../todo-form-dialog/todo-form-dialog.component';
 import {TodoFacade} from '../../facade/todo.facade';
 
+/*
+* For some of the following tasks you'll have to implement the facade functionality as well.
+*
+* TODO: Display both the completed and incomplete todo's
+* TODO: React to the toggle, edit, update and delete events of the TodoListComponent. (Use the facade)
+* TODO: Display a mat-spinner component (Material component) while loading.
+* TODO: Hide the todo section while loading.
+* TODO: Add the fa-new-todo-button component in the header, react to the createTodo event.
+*  Implement the tasks in the TodoFormDialogComponent
+* */
+
 @Component({
     selector: 'fa-todo-overview',
     template: `
         <div class='todo-overview'>
             <h1>Todo list</h1>
-            <ng-container *ngIf='!(todoFacade.isLoading() | async)'>
-                <section>
-                    <h2 class='todo-overview__header'>
-                        Incomplete
-                        <fa-new-todo-button (createTodo)='createTodo($event)'></fa-new-todo-button>
-                    </h2>
-                    <fa-todo-list
-                        emptyText="Everything has been completed, congrats!"
-                        [todos]='todoFacade.getIncompleteTodos() | async'
-                        (toggleCompleted)='toggleCompleted($event)'
-                        (edit)='editTodo($event)'
-                        (delete)='deleteTodo($event)'>
-                    </fa-todo-list>
-                </section>
-                <section>
-                    <h2>Completed</h2>
-                    <fa-todo-list
-                        emptyText="No todos completed yet ..."
-                        [todos]='todoFacade.getCompletedTodos() | async'
-                        (toggleCompleted)='toggleCompleted($event)'
-                        (edit)='editTodo($event)'
-                        (delete)='deleteTodo($event)'>
-                    </fa-todo-list>
-                </section>
+            <ng-container>
+                <h2 class='todo-overview__header'>
+                    Todo
+                    <fa-new-todo-button (createTodo)='createTodo($event)'></fa-new-todo-button>
+                </h2>
+                <fa-todo-list
+                    [todos]='todoFacade.getCompletedTodos() | async'>
+                </fa-todo-list>
             </ng-container>
-            <mat-spinner *ngIf='(todoFacade.isLoading() | async)'></mat-spinner>
         </div>
     `,
     styleUrls: ['./todo-overview.container.scss']

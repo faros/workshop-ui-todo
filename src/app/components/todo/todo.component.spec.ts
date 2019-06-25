@@ -9,14 +9,16 @@ describe('TodoComponent', () => {
     let component: TodoComponent;
     let todo: Todo;
 
+    // Some useful selectors (Can also be classes like .todo__actions, or ids #component123)
     const CHECKBOX_SELECTOR = By.css('mat-checkbox');
     const EDIT_BUTTON_SELECTOR = By.css('fa-icon-button[icon="edit"]');
     const DELETE_BUTTON_SELECTOR = By.css('fa-icon-button[icon="delete"]');
 
     beforeEach(async(() => {
+        // Angular setup
         const component = TestBed.configureTestingModule({
             declarations: [
-                TodoComponent
+                TodoComponent // declare the component we want to test
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA]
         });
@@ -24,8 +26,8 @@ describe('TodoComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(TodoComponent);
-        component = fixture.debugElement.componentInstance;
+        fixture = TestBed.createComponent(TodoComponent); // Create the test fixture we'll use to our component
+        component = fixture.debugElement.componentInstance; // Get the instance of our component
 
         todo = {
             id: '1',
@@ -33,57 +35,48 @@ describe('TodoComponent', () => {
             description: 'description',
             isCompleted: false
         };
-        component.todo = todo;
-        fixture.detectChanges();
+        component.todo = todo; // Set some mock data on our component
+        fixture.detectChanges(); // Re-render template
     });
 
     it('should show a checkbox that is checked based on the isCompleted flag', () => {
-        const checkbox = fixture.debugElement.query(CHECKBOX_SELECTOR);
+        const checkbox = fixture.debugElement.query(CHECKBOX_SELECTOR); // Find element the checkbox element
 
-        expect(checkbox.properties.checked).toEqual(false);
+        expect(checkbox.properties.checked).toEqual(false); // see if the property checked is false
 
-        todo.isCompleted = true;
-        fixture.detectChanges();
-        expect(checkbox.properties.checked).toEqual(true);
+        todo.isCompleted = true; // Change state
+        fixture.detectChanges(); // Re-render template to see change
+        expect(checkbox.properties.checked).toEqual(true); // Check that our 2-way binding worked
     });
 
     it('should show the description if provided', () => {
-        const checkbox = fixture.debugElement.query(CHECKBOX_SELECTOR);
+        const checkbox = fixture.debugElement.query(CHECKBOX_SELECTOR); // Give back an object of the class DebugElement
 
-        expect(checkbox.nativeElement.innerText).toEqual('text - description');
+        // Use the debugElement.nativeElement.innerText to check the text.
 
-        todo.description = undefined;
-        fixture.detectChanges();
-        expect(checkbox.nativeElement.innerText).toEqual('text');
+        // TODO: implement
     });
 
     describe('when the user checks the checkbox', () => {
         it('should emit the "toggleCompleted" event', () => {
-            spyOn(component.toggleCompleted, 'emit');
+            spyOn(component.toggleCompleted, 'emit'); // Spy on the emit event
 
             fixture.debugElement.query(CHECKBOX_SELECTOR).triggerEventHandler('change', undefined);
+            // Trigger the change event on the checkbox
 
-            expect(component.toggleCompleted.emit).toHaveBeenCalled();
+            expect(component.toggleCompleted.emit).toHaveBeenCalled(); // Check if our component emited the correct event.
         });
     });
 
     describe('when the user clicks the edit button', () => {
         it('should emit the "edit" event', () => {
-            spyOn(component.edit, 'emit');
-
-            fixture.debugElement.query(EDIT_BUTTON_SELECTOR).triggerEventHandler('iconClick', undefined);
-
-            expect(component.edit.emit).toHaveBeenCalled();
+            // TODO: implement
         });
     });
 
     describe('when the user clicks the delete button', () => {
         it('should emit the "delete" event', () => {
-            spyOn(component.delete, 'emit');
-
-            fixture.debugElement.query(DELETE_BUTTON_SELECTOR).triggerEventHandler('iconClick', undefined);
-
-            expect(component.delete.emit).toHaveBeenCalled();
+            // TODO: implement
         });
     });
 });

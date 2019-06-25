@@ -1,24 +1,27 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Todo} from '../../models/todo.model';
 
+/*
+*   TODO: Display all the todo's instead of just the first one.
+*   TODO: The todo component can send out events, capture all of them, and rethrow them.
+*    (When emitting the event; be sure to include which Todo is being edited, deleted, ...)
+*   TODO: Display the emptyText when there are no todos.
+*
+* */
+
 @Component({
     selector: 'fa-todo-list',
     template: `
         <div class='todo-list'>
-            <ul *ngIf='todos.length > 0'
-                class='todo-list__list'>
-                <li *ngFor='let todo of todos'>
+            <ul class='todo-list__list'>
+                <li>
                     <fa-todo
-                        [todo]='todo'
-                        (toggleCompleted)='toggleCompleted.emit(todo)'
-                        (edit)='edit.emit(todo)'
-                        (delete)='delete.emit(todo)'>
+                        *ngIf='todos[0]'
+                        [todo]='todos[0]'>
                     </fa-todo>
                 </li>
             </ul>
-            <span *ngIf='todos.length === 0'
-                  class='todo-list__empty'>
-                {{ emptyText }}
+            <span class='todo-list__empty'>
             </span>
         </div>
     `,

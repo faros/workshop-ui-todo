@@ -33,39 +33,47 @@ describe('TodoFacade', () => {
     }));
 
     beforeEach(() => {
+        // Notice how we are not using fixture here, we don't have to render any HTML/components.
+        // We also didn't declare any components in our testingModule
         todoService = TestBed.get(TodoService);
         snackBarService = TestBed.get(SnackBarService);
         facade = TestBed.get(TodoFacade);
     });
 
     describe('refreshTodos', () => {
-        it('should start loading', () => {
+        beforeEach(() => {
+            // By default a spy returns undefined, to avoid a NPE when the code tries to do
+            // todoService.getTodos().subscribe()
+            // we return an observable which never completes (and thus we avoid executing the subscribe function).
             todoService.getTodos.and.returnValue(NEVER);
+        });
+
+        it('should start loading', () => {
             facade.refreshTodos();
 
+            // Even though you might think observable are async, we can write our tests like this
+            // because they are synchronous while testing.
             facade.isLoading().subscribe(isLoading => {
                 expect(isLoading).toBeTruthy();
             });
         });
 
-        it('should fetch the todos usin the todoService', () => {
-            todoService.getTodos.and.returnValue(NEVER);
-            facade.refreshTodos();
-
-            expect(todoService.getTodos).toHaveBeenCalled();
+        it('should fetch the todos using the todoService', () => {
+            // TODO: implement
         });
 
         describe('given the call succeeds', () => {
             it('should stop loading', () => {
+                // Return an actual value this time.
                 todoService.getTodos.and.returnValue(of([]));
+
                 facade.refreshTodos();
 
-                facade.isLoading().subscribe(isLoading => {
-                    expect(isLoading).toBeFalsy();
-                });
+                // TODO: implement isLoading check.
             });
 
             it('should update the todo observables', () => {
+                // Return some data this time
                 todoService.getTodos.and.returnValue(of([{
                     id: '1',
                     text: 'text',
@@ -74,16 +82,7 @@ describe('TodoFacade', () => {
 
                 facade.refreshTodos();
 
-                facade.getIncompleteTodos().subscribe(incompleteTodos => {
-                    expect(incompleteTodos).toEqual([{
-                        id: '1',
-                        text: 'text',
-                        isCompleted: false
-                    } as Todo]);
-                });
-                facade.getCompletedTodos().subscribe(completedTodos => {
-                    expect(completedTodos).toEqual([]);
-                });
+                // TODO: similarly to how we tested isLoading, test both the getCompletedTodos and getIncompletedTodos observables.
             });
         });
 
@@ -93,56 +92,24 @@ describe('TodoFacade', () => {
 
                 facade.refreshTodos();
 
-                expect(snackBarService.showSnackBar).toHaveBeenCalledWith('Something went wrong getting the todos...');
+                // TODO: check snackBar call.
             });
         });
     });
 
     describe('getCompletedTodos', () => {
         it('should only return the completed todos', () => {
-            const completedTodos = [{
-                id: '1',
-                text: 'text',
-                description: 'description',
-                isCompleted: true
-            } as Todo];
-            const incompleteTodos = [{
-                id: '2',
-                text: 'text2',
-                isCompleted: false
-            } as Todo];
-
-            todoService.getTodos.and.returnValue(of([...completedTodos, ...incompleteTodos]));
-
-            facade.refreshTodos();
-            facade.getCompletedTodos().subscribe(todos => {
-                expect(todos).toEqual(completedTodos);
-            });
+            // TODO: we kind of already implemented this in the refreshTodo test, but it's not bad to write another test just for this method.
         });
     });
 
     describe('getIncompleteTodos', () => {
         it('should only return the incomplete todos', () => {
-            const completedTodos = [{
-                id: '1',
-                text: 'text',
-                description: 'description',
-                isCompleted: true
-            } as Todo];
-            const incompleteTodos = [{
-                id: '2',
-                text: 'text2',
-                isCompleted: false
-            } as Todo];
-
-            todoService.getTodos.and.returnValue(of([...completedTodos, ...incompleteTodos]));
-
-            facade.refreshTodos();
-            facade.getIncompleteTodos().subscribe(todos => {
-                expect(todos).toEqual(incompleteTodos);
-            });
+            // TODO: we kind of already implemented this in the refreshTodo test, but it's not bad to write another test just for this method.
         });
     });
+
+    // TODO: the following methods are very similar, you don't have to test them all, but it's good practise nevertheless.
 
     describe('createTodo', () => {
         let todo: Todo;
@@ -152,44 +119,22 @@ describe('TodoFacade', () => {
                 text: 'buy',
                 isCompleted: false
             };
+            todoService.createTodo.and.returnValue(NEVER);
         });
 
         it('should start loading', () => {
-            todoService.createTodo.and.returnValue(NEVER);
-            facade.createTodo();
-
-            facade.isLoading().subscribe(isLoading => {
-                expect(isLoading).toBeTruthy();
-            });
         });
 
         it('should create the todo using the todoService', () => {
-            todoService.createTodo.and.returnValue(NEVER);
-            facade.createTodo(todo);
-
-            expect(todoService.createTodo).toHaveBeenCalledWith(todo);
         });
 
         describe('given the call succeeds', () => {
-            beforeEach(() => {
-                todoService.getTodos.and.returnValue(NEVER);
-            });
-
             it('should refresh the todos', () => {
-                todoService.createTodo.and.returnValue(of([]));
-                facade.createTodo();
-
-                expect(todoService.getTodos).toHaveBeenCalled();
             });
         });
 
         describe('given the call fails', () => {
             it('should display a snackBar message', () => {
-                todoService.createTodo.and.returnValue(throwError('err'));
-
-                facade.createTodo();
-
-                expect(snackBarService.showSnackBar).toHaveBeenCalledWith('Something went wrong creating the todo...');
             });
         });
     });
@@ -202,44 +147,22 @@ describe('TodoFacade', () => {
                 text: 'buy',
                 isCompleted: false
             };
+            todoService.updateTodo.and.returnValue(NEVER);
         });
 
         it('should start loading', () => {
-            todoService.updateTodo.and.returnValue(NEVER);
-            facade.updateTodo();
-
-            facade.isLoading().subscribe(isLoading => {
-                expect(isLoading).toBeTruthy();
-            });
         });
 
         it('should create the todo using the todoService', () => {
-            todoService.updateTodo.and.returnValue(NEVER);
-            facade.updateTodo(todo);
-
-            expect(todoService.updateTodo).toHaveBeenCalledWith(todo);
         });
 
         describe('given the call succeeds', () => {
-            beforeEach(() => {
-                todoService.getTodos.and.returnValue(NEVER);
-            });
-
             it('should refresh the todos', () => {
-                todoService.updateTodo.and.returnValue(of([]));
-                facade.updateTodo();
-
-                expect(todoService.getTodos).toHaveBeenCalled();
             });
         });
 
         describe('given the call fails', () => {
             it('should display a snackBar message', () => {
-                todoService.updateTodo.and.returnValue(throwError('err'));
-
-                facade.updateTodo();
-
-                expect(snackBarService.showSnackBar).toHaveBeenCalledWith('Something went wrong updating the todo...');
             });
         });
     });
@@ -252,44 +175,22 @@ describe('TodoFacade', () => {
                 text: 'buy',
                 isCompleted: false
             };
+            todoService.deleteTodo.and.returnValue(NEVER);
         });
 
         it('should start loading', () => {
-            todoService.deleteTodo.and.returnValue(NEVER);
-            facade.deleteTodo();
-
-            facade.isLoading().subscribe(isLoading => {
-                expect(isLoading).toBeTruthy();
-            });
         });
 
         it('should create the todo using the todoService', () => {
-            todoService.deleteTodo.and.returnValue(NEVER);
-            facade.deleteTodo(todo);
-
-            expect(todoService.deleteTodo).toHaveBeenCalledWith(todo);
         });
 
         describe('given the call succeeds', () => {
-            beforeEach(() => {
-                todoService.getTodos.and.returnValue(NEVER);
-            });
-
             it('should refresh the todos', () => {
-                todoService.deleteTodo.and.returnValue(of([]));
-                facade.deleteTodo();
-
-                expect(todoService.getTodos).toHaveBeenCalled();
             });
         });
 
         describe('given the call fails', () => {
             it('should display a snackBar message', () => {
-                todoService.deleteTodo.and.returnValue(throwError('err'));
-
-                facade.deleteTodo();
-
-                expect(snackBarService.showSnackBar).toHaveBeenCalledWith('Something went wrong deleting the todo...');
             });
         });
     });

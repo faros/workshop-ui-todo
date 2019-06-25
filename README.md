@@ -1,27 +1,33 @@
-# AngularDemo
+# Todo
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
+You can find the full app on the `solution` branch.
+Every file has a list of TODO's that need to be implemented.
+The best way to get started is to implement the following files, from top to bottom:
+* todo.component.ts
+* todo-list.component.ts
+* todo-overview.container.ts
+* todo.facade.ts
+* todo-form-dialog.ts
 
-## Development server
+Try and implement at least a couple of tests per component.
+Be sure to read the already implemented tests, they serve as a useful example for the unimplemented tests.
+Tests are using [jasmine](https://jasmine.github.io/tutorials/your_first_suite).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+[More information about angular tests](https://angular.io/guide/testing#component-test-basics)
 
-## Code scaffolding
+Lastly, if you only want to run a specific test, or set of tests, use `fdescribe` instead of `describe` and `fit` instead of `fit`.
+Don't forget to remove to revert them afterwards though!
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Since a lot of tests fail by default, try using `fdescribe` on the first describe in your test file, to only run those tests.
 
-## Build
+## Starting the app
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `npm run start` (or `yarn start`). Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+## Starting the database
+
+Run `npm run startdb` (or `yarn startdb`). 
 
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

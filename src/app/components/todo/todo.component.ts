@@ -1,6 +1,14 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Todo} from '../../models/todo.model';
 
+/*
+*   TODO: Display the description when a TODO has one. Should be in the form of "text - description"
+*    You can use the "todo_description" class to color the text gray.
+*   TODO: Add an edit and delete button. Use the fa-icon-button component. Icons should be 'edit' and 'delete'.
+*    Be sure to emit an event for both of these actions.
+*    And put them in the todo__actions element, this makes it so you need to hover over the component to see the icons.
+* */
+
 @Component({
     selector: 'fa-todo',
     template: `
@@ -9,11 +17,8 @@ import {Todo} from '../../models/todo.model';
                 (change)='toggleCompleted.emit()'
                 [checked]='todo.isCompleted'>
                 {{ todo.text }}
-                <span *ngIf='todo.description' class='todo__description'> - {{ todo.description }}</span>
             </mat-checkbox>
             <div class='todo__actions'>
-                <fa-icon-button icon='edit' (iconClick)='edit.emit()'></fa-icon-button>
-                <fa-icon-button icon='delete' (iconClick)='delete.emit()'></fa-icon-button>
             </div>
         </div>
     `,
@@ -22,6 +27,4 @@ import {Todo} from '../../models/todo.model';
 export class TodoComponent {
     @Input() todo: Todo;
     @Output() toggleCompleted = new EventEmitter<void>();
-    @Output() edit = new EventEmitter<void>();
-    @Output() delete = new EventEmitter<void>();
 }

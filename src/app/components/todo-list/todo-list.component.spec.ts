@@ -56,48 +56,36 @@ describe('TodoListComponent', () => {
 
         describe('given the user toggles the completion of a todo', () => {
             it('should emit the "toggleCompleted" event with the todo', () => {
-                spyOn(component.toggleCompleted, 'emit');
-
-                fixture.debugElement.queryAll(TODO_SELECTOR)[1].triggerEventHandler('toggleCompleted', undefined);
-
-                expect(component.toggleCompleted.emit).toHaveBeenCalledWith(todos[1]);
+                // TODO: implement
             });
         });
 
         describe('given the user wants to edit a todo', () => {
             it('should emit the "edit" event with the todo', () => {
-                spyOn(component.edit, 'emit');
-
-                fixture.debugElement.queryAll(TODO_SELECTOR)[1].triggerEventHandler('edit', undefined);
-
-                expect(component.edit.emit).toHaveBeenCalledWith(todos[1]);
+                // TODO: implement
             });
         });
 
         describe('given the user wants to delete a todo', () => {
             it('should emit the "delete" event with the todo', () => {
-                spyOn(component.delete, 'emit');
-
-                fixture.debugElement.queryAll(TODO_SELECTOR)[1].triggerEventHandler('delete', undefined);
-
-                expect(component.delete.emit).toHaveBeenCalledWith(todos[1]);
+                // TODO: implement
             });
         });
     });
 
     describe('when there are no todos', () => {
         beforeEach(() => {
-            component.emptyText = 'Nothing here';
-            component.todos = [];
+            // TODO: implement setup
+
             fixture.detectChanges();
         });
 
         it('should display the emptyText', () => {
-            expect(fixture.debugElement.query(EMPTY_SELECTOR).nativeElement.innerText).toEqual('Nothing here');
+            // TODO: implement
         });
 
         it('should hide the todo list', () => {
-            expect(fixture.debugElement.query(TODO_LIST_SELECTOR)).toBeNull();
+            // TODO: implement
         });
     });
 });

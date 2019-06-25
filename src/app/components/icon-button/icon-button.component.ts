@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ThemePalette} from '@angular/material';
 
+// TODO: add hovering so the iconColor changes.
+
 @Component({
     selector: 'fa-icon-button',
     template: `
         <button class='icon-button'
-                (click)='iconClick.emit()'
-                (mouseenter)='mouseEnter()'
-                (mouseleave)='mouseLeave()'>
+                (click)='iconClick.emit()'>
             <mat-icon [color]='iconColor'>
                 {{icon}}
             </mat-icon>
@@ -21,11 +21,4 @@ export class IconButtonComponent {
 
     iconColor: ThemePalette = 'primary';
 
-    mouseEnter() {
-        this.iconColor = 'accent';
-    }
-
-    mouseLeave() {
-        this.iconColor = 'primary';
-    }
 }
